@@ -148,6 +148,31 @@ class VideoPlayer:
         
 # ---------------- ここからコントローラー 部分 ----------------
 
+        # コントロールをタイマーで呼び出す
+    def on_timer(self):
+        if not self.is_playing:
+            return
+        
+        ret, frame = self.cap.read()
+        if not ret:
+            # 動画終了、ループ再生
+            self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+            self.current_frame = 0
+            ret, frame = self.cap.read()
+            if not ret:
+                self.stop()
+                return
+        
+        self.current_frame = int(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
+        
+        # フレームを変換してプロット
+        lines, points = self.frame_to_lines_and_points(frame)
+        self.update_layers(lines, points)
+        
+        # 進捗表示（10フレームごと）
+        if self.current_frame % 10 == 0:
+            print(f"Frame {self.current_frame}/{self.total_frames} - Lines: {len(lines)}, Points: {len(points)}")
+
     # FPS設定
     # def set_fps(self, fps):
     #     self.target_fps = fps
@@ -182,7 +207,7 @@ class VideoPlayer:
         
         if self.timer is None:
             self.timer = QTimer()
-            self.timer.timeout.connect(self._on_timer)
+            self.timer.timeout.connect(self.on_timer)
         
         interval = int(1000 / self.target_fps)
         self.timer.start(interval)
@@ -217,3 +242,18 @@ class VideoPlayer:
         if self.point_layer and self.point_layer.id() in project.mapLayers():
             project.removeMapLayer(self.point_layer.id())
         print("Cleaned up")
+
+current_player = None
+
+# 動画をセットする
+def set_video(video_path, origin=(139.0, 35.0), scale=0.0001, fps=60, threshold=128):
+    global current_player
+    
+    # 既存のプレイヤーを停止
+    if current_player:
+        current_player.cleanup()
+    
+    current_player = VideoPlayer(video_path, origin, scale, threshold, fps)
+    current_player.play()
+    
+    return current_player
