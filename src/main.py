@@ -3,13 +3,14 @@ import os
 import importlib.util
 
 # プロジェクトのパスをsys.pathに追加（exec()対応）
-PROJECT_DIR = r'C:/Enviroments/qgis-badapple/src'
+PROJECT_ROOT = r'C:/Enviroments/qgis-badapple'
+PROJECT_DIR = os.path.join(PROJECT_ROOT, 'src')
 
 if PROJECT_DIR not in sys.path:
     sys.path.insert(0, PROJECT_DIR)
 
 # .venvのsite-packagesをパスに追加（QGISがパッケージを見つけられるように）
-VENV_SITE_PACKAGES = os.path.join(PROJECT_DIR, '.venv', 'Lib', 'site-packages')
+VENV_SITE_PACKAGES = os.path.join(PROJECT_ROOT, '.venv', 'Lib', 'site-packages')
 if os.path.exists(VENV_SITE_PACKAGES) and VENV_SITE_PACKAGES not in sys.path:
     sys.path.insert(0, VENV_SITE_PACKAGES)
 
