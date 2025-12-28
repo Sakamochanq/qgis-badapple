@@ -22,9 +22,14 @@ try:
 except ImportError:
     from PyQt5.QtWidgets import QMessageBox, QApplication
     IN_QGIS = False
+    
+def Hello_World():
+    print("Hello, World!")
 
 if __name__ == "__main__" and not IN_QGIS:
     app = QApplication(sys.argv)
+    
+    Hello_World()
     
     # アプリケーションの実行
     sys.exit(app.exec_())
