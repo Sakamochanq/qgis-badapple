@@ -53,3 +53,92 @@ class VideoPlayer:
             self.target_fps = self.video_fps
         
         print(f"Video loaded: {self.width}x{self.height}, {self.total_frames} frames, {self.video_fps:.1f} FPS")
+        
+
+
+
+ # フレームをラインとポイントに変換
+    def frame_to_lines_and_points(self, frame):
+        # グレースケール変換
+        if len(frame.shape) == 3:
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        else:
+            gray = frame
+        
+        # 二値化
+        binary = (gray < self.threshold).astype(np.uint8)
+        height, width = binary.shape
+        
+        lines = []
+        points = []
+        
+        # 各行をスキャン
+        for row in range(height):
+            line_start = None
+            for col in range(width):
+                if binary[row, col] == 1:
+                    if line_start is None:
+                        line_start = col
+                else:
+                    if line_start is not None:
+                        y = self.origin[1] + (height - row) * self.scale
+                        x1 = self.origin[0] + line_start * self.scale
+                        x2 = self.origin[0] + col * self.scale
+                        
+                        if col - line_start == 1:
+                            points.append((x1, y))
+                        else:
+                            lines.append([(x1, y), (x2, y)])
+                        line_start = None
+            
+            if line_start is not None:
+                y = self.origin[1] + (height - row) * self.scale
+                x1 = self.origin[0] + line_start * self.scale
+                x2 = self.origin[0] + width * self.scale
+                
+                if width - line_start == 1:
+                    points.append((x1, y))
+                else:
+                    lines.append([(x1, y), (x2, y)])
+        
+        return lines, points
+    
+    
+    # レイヤーの更新
+    def update_layers(self, lines, points):
+        # ラインレイヤーの更新
+        if self.line_layer is None or not self.line_layer.isValid():
+            self.line_layer = QgsVectorLayer("LineString?crs=EPSG:4326", "Video_Lines", "memory")
+            QgsProject.instance().addMapLayer(self.line_layer)
+        
+        self.line_layer.startEditing()
+        self.line_layer.deleteFeatures([f.id() for f in self.line_layer.getFeatures()])
+        
+        for line_pts in lines:
+            if len(line_pts) >= 2:
+                feature = QgsFeature()
+                qgs_points = [QgsPointXY(p[0], p[1]) for p in line_pts]
+                feature.setGeometry(QgsGeometry.fromPolylineXY(qgs_points))
+                self.line_layer.addFeature(feature)
+        
+        self.line_layer.commitChanges()
+        
+        # ポイントレイヤーの更新
+        if self.point_layer is None or not self.point_layer.isValid():
+            self.point_layer = QgsVectorLayer("Point?crs=EPSG:4326", "Video_Points", "memory")
+            QgsProject.instance().addMapLayer(self.point_layer)
+        
+        self.point_layer.startEditing()
+        self.point_layer.deleteFeatures([f.id() for f in self.point_layer.getFeatures()])
+        
+        for pt in points:
+            feature = QgsFeature()
+            feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(pt[0], pt[1])))
+            self.point_layer.addFeature(feature)
+        
+        self.point_layer.commitChanges()
+        
+        # キャンバス全体を更新
+        self.line_layer.triggerRepaint()
+        self.point_layer.triggerRepaint()
+        iface.mapCanvas().refresh()
