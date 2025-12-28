@@ -191,7 +191,7 @@ class VideoPlayer:
         ret, frame = self.cap.read()
         if ret:
             lines, points = self.frame_to_lines_and_points(frame)
-            self._update_layers(lines, points)
+            self.update_layers(lines, points)
         print(f"Seeked to frame {frame_number}")
     
     # 再生
