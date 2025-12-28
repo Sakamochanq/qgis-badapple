@@ -84,7 +84,8 @@ player.seek(100)  # Seek to frame 100
 ## Author
 
 
-* [Sakamochanq](https://github.com/Sakamochanq)  - Developer
+* [Sakamochanq](https://github.com/Sakamochanq)  - Developer  
+
     * [Claude](https://claude.ai/) - AI Assistant
 
 <br>
