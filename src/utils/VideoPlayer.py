@@ -156,6 +156,19 @@ class VideoPlayer:
     #         self.timer.setInterval(interval)
     #     print(f"FPS set to {fps}")
     
+        
+    # 指定したフレームにシーク
+    def seek(self, frame_number):
+        self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
+        self.current_frame = frame_number
+        
+        # 1フレーム表示
+        ret, frame = self.cap.read()
+        if ret:
+            lines, points = self._frame_to_lines_and_points(frame)
+            self._update_layers(lines, points)
+        print(f"Seeked to frame {frame_number}")
+    
     # 再生
     def play(self):
         if not IN_QGIS:
