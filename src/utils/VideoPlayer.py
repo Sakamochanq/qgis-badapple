@@ -2,6 +2,21 @@ import cv2
 import numpy as np
 
 
+# QGIS環境チェック
+try:
+    from qgis.PyQt.QtCore import QTimer
+    from qgis.core import (
+        QgsProject,
+        QgsVectorLayer,
+        QgsFeature,
+        QgsGeometry,
+        QgsPointXY,
+    )
+    from qgis.utils import iface
+    IN_QGIS = True
+except ImportError:
+    IN_QGIS = False
+
 class VideoPlayer:
     # コンストラクタ
     def __init__(self, video_path, origin=(139.0, 35.0), scale=0.0001, threshold=128, fps=60):
