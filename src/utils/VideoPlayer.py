@@ -39,10 +39,10 @@ class VideoPlayer:
         self.line_layer = None
         self.point_layer = None
         
-        self._init_video()
+        self.init_video()
     
     # 動画の初期化
-    def _init_video(self):
+    def init_video(self):
         self.cap = cv2.VideoCapture(self.video_path)
         if not self.cap.isOpened():
             raise ValueError(f"Cannot open video: {self.video_path}")
@@ -190,7 +190,7 @@ class VideoPlayer:
         # 1フレーム表示
         ret, frame = self.cap.read()
         if ret:
-            lines, points = self._frame_to_lines_and_points(frame)
+            lines, points = self.frame_to_lines_and_points(frame)
             self._update_layers(lines, points)
         print(f"Seeked to frame {frame_number}")
     
