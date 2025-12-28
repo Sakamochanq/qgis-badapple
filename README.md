@@ -92,4 +92,4 @@ player.seek(100)  # Seek to frame 100
 
 ## License
 
-Released under the [***](./LICENSE) License.
+Released under the [MIT](./LICENSE) License.
