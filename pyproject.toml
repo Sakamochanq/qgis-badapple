@@ -1,0 +1,26 @@
+[project]
+name = "qgis-dev"
+version = "0.1.0"
+description = "QGIS Plugin Development Environment"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "PyQt5>=5.15.0,<=5.15.11",
+    "PyQt5-stubs>=5.15.0",
+    "Pillow>=10.0.0",
+    "numpy>=1.26.0",
+    "opencv-python>=4.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+
+[tool.uv]
+# Windows向けに互換性のあるバージョンに固定
+override-dependencies = [
+    "PyQt5-Qt5==5.15.2",
+]
