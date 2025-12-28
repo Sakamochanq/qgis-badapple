@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 
 
+# 再生する動画のFPS設定
+SET_VIDEO_FPS = 60
+
 # QGIS環境チェック
 try:
     from qgis.PyQt.QtCore import QTimer
@@ -19,7 +22,7 @@ except ImportError:
 
 class VideoPlayer:
     # コンストラクタ
-    def __init__(self, video_path, origin=(139.0, 35.0), scale=0.0001, threshold=128, fps=60):
+    def __init__(self, video_path, origin=(139.0, 35.0), scale=0.0001, threshold=128, fps=SET_VIDEO_FPS):
         self.video_path = video_path
         self.origin = origin
         self.scale = scale
@@ -142,3 +145,24 @@ class VideoPlayer:
         self.line_layer.triggerRepaint()
         self.point_layer.triggerRepaint()
         iface.mapCanvas().refresh()
+        
+# ---------------- ここからコントローラー 部分 ----------------
+
+    # 再生
+    def play(self):
+        if not IN_QGIS:
+            print("QGIS environment required")
+            return
+        
+        if self.is_playing:
+            return
+        
+        self.is_playing = True
+        
+        if self.timer is None:
+            self.timer = QTimer()
+            self.timer.timeout.connect(self._on_timer)
+        
+        interval = int(1000 / self.target_fps)
+        self.timer.start(interval)
+        print(f"Playing at {self.target_fps:.1f} FPS (interval: {interval}ms)")
