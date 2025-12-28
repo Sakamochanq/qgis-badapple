@@ -2,6 +2,8 @@ import sys
 import os
 import importlib
 
+from src.utils.VideoPlayer import VideoPlayer
+
 
 # プロジェクトのパスをsys.pathに追加（exec()対応）
 PROJECT_DIR = r'C:/Enviroments/qgis-badapple'
@@ -14,6 +16,12 @@ if PROJECT_DIR not in sys.path:
 VENV_SITE_PACKAGES = os.path.join(PROJECT_DIR, '.venv', 'Lib', 'site-packages')
 if os.path.exists(VENV_SITE_PACKAGES) and VENV_SITE_PACKAGES not in sys.path:
     sys.path.insert(0, VENV_SITE_PACKAGES)
+    
+
+# キャッシュ対策でモジュールを再ロード
+for mod_name in ['utils.VideoPlayer']:
+    if mod_name in sys.modules:
+        importlib.reload(sys.modules[mod_name])
 
 # QGIS環境チェック
 try:
