@@ -148,6 +148,14 @@ class VideoPlayer:
         
 # ---------------- ここからコントローラー 部分 ----------------
 
+    # FPS設定
+    # def set_fps(self, fps):
+    #     self.target_fps = fps
+    #     if self.is_playing and self.timer:
+    #         interval = int(1000 / self.target_fps)
+    #         self.timer.setInterval(interval)
+    #     print(f"FPS set to {fps}")
+    
     # 再生
     def play(self):
         if not IN_QGIS:
