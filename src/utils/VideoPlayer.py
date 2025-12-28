@@ -174,3 +174,19 @@ class VideoPlayer:
         interval = int(1000 / self.target_fps)
         self.timer.start(interval)
         print(f"Playing at {self.target_fps:.1f} FPS (interval: {interval}ms)")
+
+    # 一時停止
+    def pause(self):
+        self.is_playing = False
+        if self.timer:
+            self.timer.stop()
+        print("Paused")
+    
+    # 終了
+    def stop(self):
+        self.is_playing = False
+        if self.timer:
+            self.timer.stop()
+        self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        self.current_frame = 0
+        print("Stopped")
