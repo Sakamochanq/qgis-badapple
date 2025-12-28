@@ -190,3 +190,17 @@ class VideoPlayer:
         self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
         self.current_frame = 0
         print("Stopped")
+        
+    #  キャンバス全体のクリーンアップ
+    def cleanup(self):
+        self.stop()
+        if self.cap:
+            self.cap.release()
+        
+        # レイヤー削除
+        project = QgsProject.instance()
+        if self.line_layer and self.line_layer.id() in project.mapLayers():
+            project.removeMapLayer(self.line_layer.id())
+        if self.point_layer and self.point_layer.id() in project.mapLayers():
+            project.removeMapLayer(self.point_layer.id())
+        print("Cleaned up")
