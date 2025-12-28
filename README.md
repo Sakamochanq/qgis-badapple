@@ -86,7 +86,9 @@ player.seek(100)  # Seek to frame 100
 
 * [Sakamochanq](https://github.com/Sakamochanq)  - Developer  
 
-    * [Claude](https://claude.ai/) - AI Assistant
+    * [Github Copilot](https://github.com/features/copilot/) - AI Assistant
+
+        * [Claude Opus 4.5](https://claude.ai/) - Model
 
 <br>
 <br>
