@@ -54,7 +54,7 @@ exec(open('[YourPath]/qgis-badapple/src/main.py').read())
 Use the following command to set the video you want to draw.
 
 ```py
-player = setup_player('[YourVideoPath].mp4')
+player = set_video('[YourVideoPath].mp4')
 ```
 
 <br>
@@ -72,7 +72,7 @@ Command | Description
 ### Example
 
 ```py
-player = setup_player('[YourVideoPath].mp4')
+player = set_video('[YourVideoPath].mp4')
 player.play()
 # and so on...
 player.seek(100)  # Seek to frame 100
