@@ -3,7 +3,7 @@ import os
 import importlib.util
 
 # プロジェクトのパスをsys.pathに追加（exec()対応）
-PROJECT_ROOT = r'C:/Enviroments/qgis-badapple'
+PROJECT_ROOT = r'<YourProjectPath>'
 PROJECT_DIR = os.path.join(PROJECT_ROOT, 'src')
 
 if PROJECT_DIR not in sys.path:
